@@ -35,7 +35,8 @@ class BasicHashTable(object):
 class ChainedHash(BasicHashTable):
     def __init__(self, hash_type, values):
         super(ChainedHash, self).__init__(hash_type, values)
-        self.hash = lambda key: key % self.size
+    def hash(self, key):
+        return key % self.size
 
     def add_element(self, num):
         curr_node = self.hash_table[self.hash(num)]
@@ -61,14 +62,18 @@ class ChainedHash(BasicHashTable):
 class ChainedHashMultiply(ChainedHash):
     def __init__(self, hash_type, values):
         super(ChainedHashMultiply, self).__init__(hash_type, values)
+
+    def hash(self, key):
         A = 0.6180339887
-        self.hash = lambda key : int(self.size*(key*A % 1))
+        return int(self.size*(key*A % 1))
 
 
 class OpenAdressHash(BasicHashTable):
     def __init__(self, hash_type, values):
         super(OpenAdressHash, self).__init__(hash_type, values)
-        self.hash = lambda key, i: (ChainedHash.hash(key) + i) % self.size
+
+    def hash(self, key, i):
+        return ((key % self.size) + i) % self.size
 
     def add_element(self, num):
         i = 0
@@ -86,8 +91,8 @@ class OpenAdressHash(BasicHashTable):
         start_index = self.hash(num, i)
         curr_node = self.hash_table[start_index]
         if curr_node != None:
-            while self.hash_table[start_index + i] != num:
-                if self.hash_table[start_index + i] == None:
+            while self.hash_table[(start_index + i) % self.size] != num:
+                if self.hash_table[(start_index + i) % self.size] == None:
                     return False
                 i += 1
             return True
@@ -99,17 +104,19 @@ class OpenAdressHashSquare(OpenAdressHash):
     def __init__(self, hash_type, values):
         super(OpenAdressHashSquare, self).__init__(hash_type, values)
 
-    def hash(key, i):
-        return (ChainedHashDivision.hash(key) + i*2 + i**2 * 3) % self.size
+    def hash(self, key, i):
+        return ((key % self.size) + i*2 + i**2 * 3) % self.size
 
 
 class OpenAdressHashDouble(OpenAdressHash):
     def __init__(self, hash_type, values):
         super(OpenAdressHashDouble, self).__init__(hash_type, values)
 
-    def hash(key, i):
+    def hash(self, key, i):
+        A = 0.6180339887
         h1 = lambda x: x % self.size
-        return (h1(key) + i*ChainedHashMultiply.hash(key)) % self.size
+        h2 = lambda x: int(self.size*(x*A % 1))
+        return (h1(key) + i*h2(key)) % self.size
 
 
 class HashTable(object):
