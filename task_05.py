@@ -32,7 +32,7 @@ class BasicHashTable:
 
 class ChainedHash(BasicHashTable):
     def __init__(self, hash_type, values):
-        super().__init__(self, hash_type, values)
+        super().__init__(hash_type, values)
         self.hash = lambda key: key % self.size
 
     def add_element(self, num):
@@ -56,14 +56,14 @@ class ChainedHash(BasicHashTable):
 
 class ChainedHashMultiply(ChainedHash):
     def __init__(self, hash_type, values):
-        super().__init__(self, hash_type, values)
+        super().__init__(hash_type, values)
         A = 0.6180339887
         self.hash = lambda key : len(self.size*(key*A % 1))
 
 
 class OpenAdressHash(BasicHashTable):
     def __init__(self, hash_type, values):
-        super().__init__(self, hash_type, values)
+        super().__init__(hash_type, values)
         self.hash = lambda key, i: (ChainedHash.hash(key) + i) % self.size
 
     def add_element(self, num):
@@ -101,7 +101,7 @@ class OpenAdressHash(BasicHashTable):
 
 class OpenAdressHashSquare(OpenAdressHash):
     def __init__(self, hash_type, values):
-        super().__init__(self, hash_type, values)
+        super().__init__(hash_type, values)
 
     def hash(key, i):
         return (ChainedHashDivision.hash(key) + i*2 + i**2 * 3) % self.size
@@ -109,7 +109,7 @@ class OpenAdressHashSquare(OpenAdressHash):
 
 class OpenAdressHashDouble(OpenAdressHash):
     def __init__(self, hash_type, values):
-        super().__init__(self, hash_type, values)
+        super().__init__(hash_type, values)
 
     def hash(key, i):
         h1 = lambda x: x % self.size
