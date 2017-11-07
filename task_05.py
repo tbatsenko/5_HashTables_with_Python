@@ -3,7 +3,7 @@ import math
 class Node(object):
     def __init__(self, value=None, next_node=None):
         self.value = value
-        self.next_node = next_node
+        self.next = next_node
 
 class BasicHashTable(object):
     def __init__(self, hash_type, values):
@@ -22,6 +22,8 @@ class BasicHashTable(object):
             if prime_found:
                 return number
             number -= 1
+
+            return number
 
         self.size = find_closest_prime(len(values) * 3 - 1)
 
@@ -42,7 +44,7 @@ class ChainedHash(BasicHashTable):
                 curr_node = curr_node.next
             curr_node.next = Node(num)
         else:
-            self.hash_table[self.hash(num)] = num
+            self.hash_table[self.hash(num)] = Node(num)
 
     def get_element(self, num):
         curr_node = self.hash_table[self.hash(num)]
@@ -51,6 +53,8 @@ class ChainedHash(BasicHashTable):
                 if curr_node.value == num:
                     return True
                 curr_node = curr_node.next
+            if curr_node.value == num:
+                return True
         return False
 
 
@@ -58,7 +62,7 @@ class ChainedHashMultiply(ChainedHash):
     def __init__(self, hash_type, values):
         super(ChainedHashMultiply, self).__init__(hash_type, values)
         A = 0.6180339887
-        self.hash = lambda key : len(self.size*(key*A % 1))
+        self.hash = lambda key : int(self.size*(key*A % 1))
 
 
 class OpenAdressHash(BasicHashTable):
@@ -67,10 +71,10 @@ class OpenAdressHash(BasicHashTable):
         self.hash = lambda key, i: (ChainedHash.hash(key) + i) % self.size
 
     def add_element(self, num):
-        start_index = self.hash(num)
+        i = 0
+        start_index = self.hash(num, i)
         curr_node = self.hash_table[start_index]
         if curr_node != None:
-            i = 0
             while self.hash_table[start_index + i] != None:
                 i += 1
             self.hash_table[start_index + i] = num
@@ -78,18 +82,10 @@ class OpenAdressHash(BasicHashTable):
             self.hash_table[start_index] = num
 
     def get_element(self, num):
-        curr_node = self.hash_table[self.hash(num)]
-        if curr_node:
-            while curr_node.next:
-                if curr_node.value == num:
-                    return True
-                curr_node = curr_node.next
-        return False
-
-        start_index = self.hash(num)
+        i = 0
+        start_index = self.hash(num, i)
         curr_node = self.hash_table[start_index]
         if curr_node != None:
-            i = 0
             while self.hash_table[start_index + i] != num:
                 if self.hash_table[start_index + i] == None:
                     return False
@@ -133,6 +129,9 @@ class HashTable(object):
         else:
             self.current_hash_table = OpenAdressHashDouble(hash_type, values)
 
+        for el in values:
+            self.current_hash_table.add_element(el)
+
 
     def get_element(self, num):
         return self.current_hash_table.get_element(num)
@@ -140,18 +139,14 @@ class HashTable(object):
 
     def get_collisions_amount(self):
         nones_amount = 0
-        for el in self.hash_table:
+        for el in self.current_hash_table.hash_table:
             if el == None:
                 nones_amount += 1
-        return nones_amount + len(self.values) - self.size
+        return nones_amount + len(self.current_hash_table.values) - self.current_hash_table.size
 
-    def find_sum(s):
-        res = []
-        for x in range(s // 2):
+    def find_sum(self, s):
+        for x in range(s // 2 + 1):
             y = s - x
             if self.current_hash_table.get_element(x) and self.current_hash_table.get_element(y):
-                res.append(x, y)
-
-        return res
-
-myhashtable = HashTable(2, [1, 2, 3, 4, 55, 6, 3, 2, 3, 6])
+                if x + y == s:
+                    return x, y
