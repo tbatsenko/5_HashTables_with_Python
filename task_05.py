@@ -13,10 +13,10 @@ class BasicHashTable:
             number = n
             prime_found = False
             while True:
-                for i in range(2, int(Math.sqrt(number) + 2)):
+                for i in range(2, int(math.sqrt(number) + 2)):
                     if number % i == 0:
                         break
-                    if i == int(Math.sqrt() + 1):
+                    if i == int(math.sqrt(n) + 1):
                         prime_found = True
 
             if prime_found:
