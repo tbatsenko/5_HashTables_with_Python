@@ -16,7 +16,7 @@ class BasicHashTable:
                 for i in range(2, int(Math.sqrt(number) + 2)):
                     if number % i == 0:
                         break
-                    if i == int(Math.sqrt() + 1:
+                    if i == int(Math.sqrt() + 1):
                         prime_found = True
 
             if prime_found:
@@ -58,7 +58,7 @@ class ChainedHashMultiply(ChainedHash):
     def __init__(self, hash_type, values):
         super().__init__(self, hash_type, values)
         A = 0.6180339887
-        self.hash = lambda key : len(self.size*(key*A % 1)
+        self.hash = lambda key : len(self.size*(key*A % 1))
 
 
 class OpenAdressHash(BasicHashTable):
@@ -114,20 +114,20 @@ class OpenAdressHashDouble(OpenAdressHash):
     def hash(key, i):
         h1 = lambda x: x % self.size
         return (h1(key) + i*ChainedHashMultiply.hash(key)) % self.size
-    
+
 
 class HashTable:
     def __init__(self, hash_type, values):
-        if self.hash_type == 1:
+        if hash_type == 1:
             self.current_hash_table = ChainedHash(hash_type, values)
 
-        elif self.hash_type == 2:
+        elif hash_type == 2:
             self.current_hash_table = ChainedHashMultiply(hash_type, values)
 
-        elif self.hash_type == 3:
+        elif hash_type == 3:
             self.current_hash_table = OpenAdressHash(hash_type, values)
 
-        elif self.hash_type == 4:
+        elif hash_type == 4:
             self.current_hash_table = OpenAdressHashSquare(hash_type, values)
 
         else:
@@ -153,50 +153,3 @@ class HashTable:
                 res.append(x, y)
 
         return res
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-В роботі необхідно реалізувати різні типи хеш-таблиць із використанням різних хеш-функцій
-для розв’язання наведеної вище задачі.
-При цьому потрібно порівняти ефективність різних підходів шляхом підрахунку
-кількості колізій для кожного типу хеш-функцій та хеш-таблиць.
-
-Нижче наведений перелік типів хеш-таблиць та хеш-функцій:
-
-1. Хеш-таблиця на основі ланцюгів (chained hash) із використанням хеш-функції за методом ділення.
-
-2. Хеш-таблиця на основі ланцюгів (chained hash) із використанням хеш-функції за методом множення.
-
-3. Хеш-таблиця на основі відкритої адресації (open address hash) із використанням хеш-функції за методом лінійного дослідження.
-
-4. Хеш-таблиця на основі відкритої адресації (open address hash) із використанням хеш-функції за методом квадратичного дослідження.
-
-5. Хеш-таблиця на основі відкритої адресації (open address hash) із використанням хеш-функції за методом подвійного хешування.
-
-Увага!! Розмір хеш-таблиці T не повинен перевищувати потрійного розміру вхідного масиву A.
-
-Реалізація
-
-Ви повинні створити модуль task_05.py, в якому реалізувати клас HashTable з наступними методами:
-
-__init__(hash_type, values) - ініціалізує хеш-таблицю.
-hash_type - ціле число від 1 до 5, яке визначає тип завдання (див. перелік типів хеш-таблиць у розділі Завдання)
-values - масив вхідних даних, які є цілими числами
-get_collisions_amount() - повертає кількість колізій, які були отримані при ініціалізації хеш-таблиці - додаванні елементів з масиву values у конструкторі
-find_sum(s) - повертає пару цілих чисел x, y, таких що x + y = s або None, якщо серед значень в таблиці не було знайдено таких два числа, що їх сума дорівнює s
-
-    """
